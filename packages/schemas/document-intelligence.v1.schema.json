@@ -1,0 +1,1475 @@
+{
+  "$defs": {
+    "AIInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "configured": {
+          "title": "Configured",
+          "type": "boolean"
+        },
+        "developmentOnly": {
+          "title": "Developmentonly",
+          "type": "boolean"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "provider": {
+          "title": "Provider",
+          "type": "string"
+        }
+      },
+      "required": [
+        "provider",
+        "model",
+        "configured",
+        "developmentOnly"
+      ],
+      "title": "AIInfo",
+      "type": "object"
+    },
+    "AskRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "question": {
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        }
+      },
+      "required": [
+        "question"
+      ],
+      "title": "AskRequest",
+      "type": "object"
+    },
+    "AskResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "answer": {
+          "title": "Answer",
+          "type": "string"
+        },
+        "answerId": {
+          "title": "Answerid",
+          "type": "string"
+        },
+        "answerable": {
+          "title": "Answerable",
+          "type": "boolean"
+        },
+        "citations": {
+          "items": {
+            "$ref": "#/$defs/Citation"
+          },
+          "title": "Citations",
+          "type": "array"
+        },
+        "documentId": {
+          "title": "Documentid",
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        },
+        "schemaVersion": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schemaversion",
+          "type": "string"
+        },
+        "verification": {
+          "$ref": "#/$defs/VerificationSummary"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "answerId",
+        "documentId",
+        "question",
+        "answerable",
+        "answer",
+        "citations",
+        "verification",
+        "warnings",
+        "provenance"
+      ],
+      "title": "AskResponse",
+      "type": "object"
+    },
+    "Citation": {
+      "additionalProperties": false,
+      "description": "A source reference produced by the model and checked against the extracted text.\n\n- ``verified``: quote found on the cited page.\n- ``relocated``: quote found, but on a different page (``matched_page``).\n- ``approximate``: close (fuzzy) match on the cited or another page.\n- ``unverified``: quote not found in the document.\n- ``invalid_page``: cited page does not exist and the quote was not found elsewhere.",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "matchScore": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Matchscore",
+          "type": "number"
+        },
+        "matchedPage": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Matchedpage"
+        },
+        "page": {
+          "title": "Page",
+          "type": "integer"
+        },
+        "quote": {
+          "title": "Quote",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "verified",
+            "relocated",
+            "approximate",
+            "unverified",
+            "invalid_page"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "page",
+        "quote",
+        "status",
+        "matchScore"
+      ],
+      "title": "Citation",
+      "type": "object"
+    },
+    "ContentDescriptor": {
+      "additionalProperties": false,
+      "properties": {
+        "filename": {
+          "title": "Filename",
+          "type": "string"
+        },
+        "mediaType": {
+          "title": "Mediatype",
+          "type": "string"
+        },
+        "sizeBytes": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sizebytes"
+        }
+      },
+      "required": [
+        "filename",
+        "mediaType"
+      ],
+      "title": "ContentDescriptor",
+      "type": "object"
+    },
+    "ContentFile": {
+      "additionalProperties": false,
+      "properties": {
+        "filename": {
+          "title": "Filename",
+          "type": "string"
+        },
+        "mediaType": {
+          "default": "application/pdf",
+          "title": "Mediatype",
+          "type": "string"
+        },
+        "role": {
+          "default": "primary",
+          "title": "Role",
+          "type": "string"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        },
+        "sizeBytes": {
+          "minimum": 0,
+          "title": "Sizebytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "filename",
+        "sizeBytes",
+        "sha256"
+      ],
+      "title": "ContentFile",
+      "type": "object"
+    },
+    "DocumentIntelligenceReport": {
+      "additionalProperties": false,
+      "properties": {
+        "actions": {
+          "items": {
+            "$ref": "#/$defs/RecommendedAction"
+          },
+          "title": "Actions",
+          "type": "array"
+        },
+        "citations": {
+          "items": {
+            "$ref": "#/$defs/Citation"
+          },
+          "title": "Citations",
+          "type": "array"
+        },
+        "document": {
+          "$ref": "#/$defs/DocumentRef"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "reportId": {
+          "title": "Reportid",
+          "type": "string"
+        },
+        "requirements": {
+          "items": {
+            "$ref": "#/$defs/Requirement"
+          },
+          "title": "Requirements",
+          "type": "array"
+        },
+        "risks": {
+          "items": {
+            "$ref": "#/$defs/Risk"
+          },
+          "title": "Risks",
+          "type": "array"
+        },
+        "schemaVersion": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schemaversion",
+          "type": "string"
+        },
+        "specifications": {
+          "items": {
+            "$ref": "#/$defs/Specification"
+          },
+          "title": "Specifications",
+          "type": "array"
+        },
+        "summary": {
+          "$ref": "#/$defs/SummarySection"
+        },
+        "task": {
+          "const": "summarize",
+          "default": "summarize",
+          "title": "Task",
+          "type": "string"
+        },
+        "verification": {
+          "$ref": "#/$defs/VerificationSummary"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "reportId",
+        "document",
+        "citations",
+        "verification",
+        "limitations",
+        "warnings",
+        "provenance",
+        "summary",
+        "requirements",
+        "specifications",
+        "risks",
+        "actions"
+      ],
+      "title": "DocumentIntelligenceReport",
+      "type": "object"
+    },
+    "DocumentList": {
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "items": {
+            "$ref": "#/$defs/DocumentRecord"
+          },
+          "title": "Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "items"
+      ],
+      "title": "DocumentList",
+      "type": "object"
+    },
+    "DocumentMetadata": {
+      "additionalProperties": false,
+      "description": "Business metadata of a document (Windchill-like for WTDocuments).\n\nComes from the document provider — NEVER from the LLM.",
+      "properties": {
+        "documentType": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Documenttype"
+        },
+        "iteration": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Iteration"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Location"
+        },
+        "modifiedBy": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Modifiedby"
+        },
+        "modifiedDate": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Modifieddate"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "number": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Number"
+        },
+        "revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revision"
+        },
+        "sourceRef": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sourceref"
+        },
+        "state": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "State"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "DocumentMetadata",
+      "type": "object"
+    },
+    "DocumentPages": {
+      "additionalProperties": false,
+      "properties": {
+        "documentId": {
+          "title": "Documentid",
+          "type": "string"
+        },
+        "pages": {
+          "items": {
+            "$ref": "#/$defs/ExtractedPage"
+          },
+          "title": "Pages",
+          "type": "array"
+        }
+      },
+      "required": [
+        "documentId",
+        "pages"
+      ],
+      "title": "DocumentPages",
+      "type": "object"
+    },
+    "DocumentRecord": {
+      "additionalProperties": false,
+      "description": "A document registered with the intelligence service (uploaded or loaded from a provider).",
+      "properties": {
+        "content": {
+          "$ref": "#/$defs/ContentFile"
+        },
+        "createdAt": {
+          "format": "date-time",
+          "title": "Createdat",
+          "type": "string"
+        },
+        "developmentOnly": {
+          "title": "Developmentonly",
+          "type": "boolean"
+        },
+        "extraction": {
+          "$ref": "#/$defs/ExtractionSummary"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "metadata": {
+          "$ref": "#/$defs/DocumentMetadata"
+        },
+        "source": {
+          "$ref": "#/$defs/DocumentSource"
+        },
+        "sourceProvider": {
+          "title": "Sourceprovider",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "source",
+        "sourceProvider",
+        "developmentOnly",
+        "metadata",
+        "content",
+        "extraction",
+        "createdAt"
+      ],
+      "title": "DocumentRecord",
+      "type": "object"
+    },
+    "DocumentRef": {
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "$ref": "#/$defs/ContentFile"
+        },
+        "developmentOnly": {
+          "title": "Developmentonly",
+          "type": "boolean"
+        },
+        "documentId": {
+          "title": "Documentid",
+          "type": "string"
+        },
+        "metadata": {
+          "$ref": "#/$defs/DocumentMetadata"
+        },
+        "pageCount": {
+          "title": "Pagecount",
+          "type": "integer"
+        },
+        "source": {
+          "$ref": "#/$defs/DocumentSource"
+        },
+        "sourceProvider": {
+          "title": "Sourceprovider",
+          "type": "string"
+        }
+      },
+      "required": [
+        "documentId",
+        "source",
+        "sourceProvider",
+        "developmentOnly",
+        "metadata",
+        "content",
+        "pageCount"
+      ],
+      "title": "DocumentRef",
+      "type": "object"
+    },
+    "DocumentSource": {
+      "enum": [
+        "windchill",
+        "upload"
+      ],
+      "title": "DocumentSource",
+      "type": "string"
+    },
+    "ErrorBody": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "details": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Details"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "retryable": {
+          "title": "Retryable",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "retryable"
+      ],
+      "title": "ErrorBody",
+      "type": "object"
+    },
+    "ErrorResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/ErrorBody"
+        }
+      },
+      "required": [
+        "error"
+      ],
+      "title": "ErrorResponse",
+      "type": "object"
+    },
+    "ExecutiveSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "citationIds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Citationids",
+          "type": "array"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "citationIds"
+      ],
+      "title": "ExecutiveSummary",
+      "type": "object"
+    },
+    "ExtractedPage": {
+      "additionalProperties": false,
+      "properties": {
+        "charCount": {
+          "minimum": 0,
+          "title": "Charcount",
+          "type": "integer"
+        },
+        "hasTextLayer": {
+          "title": "Hastextlayer",
+          "type": "boolean"
+        },
+        "needsOcr": {
+          "title": "Needsocr",
+          "type": "boolean"
+        },
+        "number": {
+          "minimum": 1,
+          "title": "Number",
+          "type": "integer"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "number",
+        "text",
+        "charCount",
+        "hasTextLayer",
+        "needsOcr"
+      ],
+      "title": "ExtractedPage",
+      "type": "object"
+    },
+    "ExtractionSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "extractor": {
+          "title": "Extractor",
+          "type": "string"
+        },
+        "pageCount": {
+          "title": "Pagecount",
+          "type": "integer"
+        },
+        "pagesNeedingOcr": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Pagesneedingocr",
+          "type": "array"
+        },
+        "pagesWithText": {
+          "title": "Pageswithtext",
+          "type": "integer"
+        },
+        "totalChars": {
+          "title": "Totalchars",
+          "type": "integer"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "pageCount",
+        "pagesWithText",
+        "pagesNeedingOcr",
+        "totalChars",
+        "extractor"
+      ],
+      "title": "ExtractionSummary",
+      "type": "object"
+    },
+    "HealthResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "ai": {
+          "$ref": "#/$defs/AIInfo"
+        },
+        "limits": {
+          "$ref": "#/$defs/Limits"
+        },
+        "status": {
+          "const": "ok",
+          "default": "ok",
+          "title": "Status",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        },
+        "windchill": {
+          "$ref": "#/$defs/SourceProviderInfo"
+        }
+      },
+      "required": [
+        "version",
+        "ai",
+        "windchill",
+        "limits"
+      ],
+      "title": "HealthResponse",
+      "type": "object"
+    },
+    "ImportFromWindchillRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "reference": {
+          "title": "Reference",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reference"
+      ],
+      "title": "ImportFromWindchillRequest",
+      "type": "object"
+    },
+    "KeyPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "citationIds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Citationids",
+          "type": "array"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "citationIds"
+      ],
+      "title": "KeyPoint",
+      "type": "object"
+    },
+    "Limits": {
+      "additionalProperties": false,
+      "properties": {
+        "maxPages": {
+          "title": "Maxpages",
+          "type": "integer"
+        },
+        "maxQuestionChars": {
+          "title": "Maxquestionchars",
+          "type": "integer"
+        },
+        "maxUploadMb": {
+          "title": "Maxuploadmb",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "maxUploadMb",
+        "maxPages",
+        "maxQuestionChars"
+      ],
+      "title": "Limits",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "attempts": {
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "cached": {
+          "default": false,
+          "title": "Cached",
+          "type": "boolean"
+        },
+        "durationMs": {
+          "title": "Durationms",
+          "type": "integer"
+        },
+        "extractor": {
+          "title": "Extractor",
+          "type": "string"
+        },
+        "generatedAt": {
+          "format": "date-time",
+          "title": "Generatedat",
+          "type": "string"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "pipelineVersion": {
+          "title": "Pipelineversion",
+          "type": "string"
+        },
+        "promptId": {
+          "title": "Promptid",
+          "type": "string"
+        },
+        "promptVersion": {
+          "title": "Promptversion",
+          "type": "string"
+        },
+        "provider": {
+          "title": "Provider",
+          "type": "string"
+        },
+        "schemaVersion": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schemaversion",
+          "type": "string"
+        },
+        "task": {
+          "enum": [
+            "summarize",
+            "requirements",
+            "risks",
+            "ask"
+          ],
+          "title": "Task",
+          "type": "string"
+        },
+        "usage": {
+          "$ref": "#/$defs/TokenUsage"
+        }
+      },
+      "required": [
+        "task",
+        "promptId",
+        "promptVersion",
+        "provider",
+        "model",
+        "pipelineVersion",
+        "extractor",
+        "generatedAt",
+        "durationMs",
+        "attempts",
+        "usage"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "RecommendedAction": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "title": "Action",
+          "type": "string"
+        },
+        "basis": {
+          "enum": [
+            "explicit",
+            "inferred"
+          ],
+          "title": "Basis",
+          "type": "string"
+        },
+        "citationIds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Citationids",
+          "type": "array"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "priority": {
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ],
+          "title": "Priority",
+          "type": "string"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "action",
+        "rationale",
+        "priority",
+        "basis",
+        "citationIds"
+      ],
+      "title": "RecommendedAction",
+      "type": "object"
+    },
+    "Requirement": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "enum": [
+            "explicit",
+            "inferred"
+          ],
+          "title": "Basis",
+          "type": "string"
+        },
+        "category": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Category"
+        },
+        "citationIds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Citationids",
+          "type": "array"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "obligation": {
+          "enum": [
+            "mandatory",
+            "recommended",
+            "permitted",
+            "informational"
+          ],
+          "title": "Obligation",
+          "type": "string"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "statement",
+        "basis",
+        "obligation",
+        "citationIds"
+      ],
+      "title": "Requirement",
+      "type": "object"
+    },
+    "RequirementsReport": {
+      "additionalProperties": false,
+      "properties": {
+        "citations": {
+          "items": {
+            "$ref": "#/$defs/Citation"
+          },
+          "title": "Citations",
+          "type": "array"
+        },
+        "document": {
+          "$ref": "#/$defs/DocumentRef"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "reportId": {
+          "title": "Reportid",
+          "type": "string"
+        },
+        "requirements": {
+          "items": {
+            "$ref": "#/$defs/Requirement"
+          },
+          "title": "Requirements",
+          "type": "array"
+        },
+        "schemaVersion": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schemaversion",
+          "type": "string"
+        },
+        "task": {
+          "const": "requirements",
+          "default": "requirements",
+          "title": "Task",
+          "type": "string"
+        },
+        "verification": {
+          "$ref": "#/$defs/VerificationSummary"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "reportId",
+        "document",
+        "citations",
+        "verification",
+        "limitations",
+        "warnings",
+        "provenance",
+        "requirements"
+      ],
+      "title": "RequirementsReport",
+      "type": "object"
+    },
+    "Risk": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "enum": [
+            "explicit",
+            "inferred"
+          ],
+          "title": "Basis",
+          "type": "string"
+        },
+        "citationIds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Citationids",
+          "type": "array"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ],
+          "title": "Severity",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "description",
+        "severity",
+        "basis",
+        "citationIds"
+      ],
+      "title": "Risk",
+      "type": "object"
+    },
+    "RisksReport": {
+      "additionalProperties": false,
+      "properties": {
+        "citations": {
+          "items": {
+            "$ref": "#/$defs/Citation"
+          },
+          "title": "Citations",
+          "type": "array"
+        },
+        "document": {
+          "$ref": "#/$defs/DocumentRef"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "reportId": {
+          "title": "Reportid",
+          "type": "string"
+        },
+        "risks": {
+          "items": {
+            "$ref": "#/$defs/Risk"
+          },
+          "title": "Risks",
+          "type": "array"
+        },
+        "schemaVersion": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schemaversion",
+          "type": "string"
+        },
+        "task": {
+          "const": "risks",
+          "default": "risks",
+          "title": "Task",
+          "type": "string"
+        },
+        "verification": {
+          "$ref": "#/$defs/VerificationSummary"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "reportId",
+        "document",
+        "citations",
+        "verification",
+        "limitations",
+        "warnings",
+        "provenance",
+        "risks"
+      ],
+      "title": "RisksReport",
+      "type": "object"
+    },
+    "SourceProviderInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "developmentOnly": {
+          "title": "Developmentonly",
+          "type": "boolean"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "developmentOnly"
+      ],
+      "title": "SourceProviderInfo",
+      "type": "object"
+    },
+    "Specification": {
+      "additionalProperties": false,
+      "properties": {
+        "citationIds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Citationids",
+          "type": "array"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "parameter": {
+          "title": "Parameter",
+          "type": "string"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "value": {
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "parameter",
+        "value",
+        "citationIds"
+      ],
+      "title": "Specification",
+      "type": "object"
+    },
+    "SummarySection": {
+      "additionalProperties": false,
+      "properties": {
+        "executive": {
+          "$ref": "#/$defs/ExecutiveSummary"
+        },
+        "keyPoints": {
+          "items": {
+            "$ref": "#/$defs/KeyPoint"
+          },
+          "title": "Keypoints",
+          "type": "array"
+        },
+        "purpose": {
+          "title": "Purpose",
+          "type": "string"
+        }
+      },
+      "required": [
+        "purpose",
+        "executive",
+        "keyPoints"
+      ],
+      "title": "SummarySection",
+      "type": "object"
+    },
+    "TokenUsage": {
+      "additionalProperties": false,
+      "properties": {
+        "cacheReadInputTokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cachereadinputtokens"
+        },
+        "inputTokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Inputtokens"
+        },
+        "outputTokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Outputtokens"
+        }
+      },
+      "title": "TokenUsage",
+      "type": "object"
+    },
+    "VerificationSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "approximate": {
+          "title": "Approximate",
+          "type": "integer"
+        },
+        "invalidPage": {
+          "title": "Invalidpage",
+          "type": "integer"
+        },
+        "itemsTotal": {
+          "title": "Itemstotal",
+          "type": "integer"
+        },
+        "itemsWithoutVerifiedSource": {
+          "title": "Itemswithoutverifiedsource",
+          "type": "integer"
+        },
+        "relocated": {
+          "title": "Relocated",
+          "type": "integer"
+        },
+        "totalCitations": {
+          "title": "Totalcitations",
+          "type": "integer"
+        },
+        "unverified": {
+          "title": "Unverified",
+          "type": "integer"
+        },
+        "verified": {
+          "title": "Verified",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "totalCitations",
+        "verified",
+        "relocated",
+        "approximate",
+        "unverified",
+        "invalidPage",
+        "itemsTotal",
+        "itemsWithoutVerifiedSource"
+      ],
+      "title": "VerificationSummary",
+      "type": "object"
+    },
+    "WindchillDocument": {
+      "additionalProperties": false,
+      "description": "A document as described by the provider (metadata only, no content bytes).",
+      "properties": {
+        "developmentOnly": {
+          "title": "Developmentonly",
+          "type": "boolean"
+        },
+        "metadata": {
+          "$ref": "#/$defs/DocumentMetadata"
+        },
+        "primaryContent": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ContentDescriptor"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reference": {
+          "title": "Reference",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reference",
+        "metadata",
+        "developmentOnly"
+      ],
+      "title": "WindchillDocument",
+      "type": "object"
+    },
+    "WindchillDocumentList": {
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "items": {
+            "$ref": "#/$defs/WindchillDocument"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "provider": {
+          "$ref": "#/$defs/SourceProviderInfo"
+        }
+      },
+      "required": [
+        "provider",
+        "items"
+      ],
+      "title": "WindchillDocumentList",
+      "type": "object"
+    }
+  },
+  "$id": "https://docintel.local/schemas/document-intelligence.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Generated from apps/api/src/docintel/schemas/report.py — do not edit by hand. Schema version 1.0.",
+  "title": "Document Intelligence API contracts"
+}

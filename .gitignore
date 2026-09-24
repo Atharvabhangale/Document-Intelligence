@@ -1,0 +1,26 @@
+# Secrets / local config
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Node / web
+node_modules/
+apps/web/dist/
+apps/web/coverage/
+*.tsbuildinfo
+
+# Runtime data (uploaded documents, extracted text, cached reports, harness output)
+.data/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
