@@ -1,0 +1,3 @@
+# Repository-wide ruff settings (scripts/, apps/api/). The canonical configuration lives in
+# apps/api/pyproject.toml so the backend project stays self-contained.
+extend = "apps/api/pyproject.toml"

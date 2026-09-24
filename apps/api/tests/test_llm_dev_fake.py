@@ -166,6 +166,7 @@ def test_unsupported_task_is_rejected() -> None:
     with pytest.raises(AIProviderError) as info:
         DevFakeLLMProvider().generate_json(make_request("translate"))
 
+    assert info.value.code == "ai_request_rejected"
     assert info.value.retryable is False
 
 

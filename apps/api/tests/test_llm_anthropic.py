@@ -15,6 +15,7 @@ from docintel.core.errors import (
     AIConfigurationError,
     AIProviderError,
     AIRateLimitError,
+    AIRequestRejectedError,
     AITimeoutError,
     AIUnavailableError,
 )
@@ -269,14 +270,14 @@ def _status_error(cls: type[anthropic.APIStatusError], status: int) -> anthropic
         (_status_error(anthropic.RateLimitError, 429), AIRateLimitError, "ai_rate_limited", True),
         (
             _status_error(anthropic.BadRequestError, 400),
-            AIProviderError,
-            "ai_provider_error",
+            AIRequestRejectedError,
+            "ai_request_rejected",
             False,
         ),
         (
             _status_error(anthropic.RequestTooLargeError, 413),
-            AIProviderError,
-            "ai_provider_error",
+            AIRequestRejectedError,
+            "ai_request_rejected",
             False,
         ),
         (
@@ -298,7 +299,12 @@ def _status_error(cls: type[anthropic.APIStatusError], status: int) -> anthropic
             True,
         ),
         (_status_error(anthropic.OverloadedError, 529), AIUnavailableError, "ai_unavailable", True),
-        (_status_error(anthropic.APIStatusError, 418), AIProviderError, "ai_provider_error", False),
+        (
+            _status_error(anthropic.APIStatusError, 418),
+            AIRequestRejectedError,
+            "ai_request_rejected",
+            False,
+        ),
         (_status_error(anthropic.ConflictError, 409), AIProviderError, "ai_provider_error", True),
         (anthropic.APITimeoutError(request=_REQUEST), AITimeoutError, "ai_timeout", True),
         (
@@ -369,5 +375,7 @@ def test_bad_request_has_safe_message() -> None:
         provider.generate_json(make_request())
 
     assert info.value.message == "The AI service rejected the request."
-    # Non-retryable on this instance only; the class default is unchanged.
+    assert isinstance(info.value, AIRequestRejectedError)
+    assert info.value.retryable is False
+    # The generic provider error stays retryable.
     assert AIProviderError.retryable is True

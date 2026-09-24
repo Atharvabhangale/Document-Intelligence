@@ -10,7 +10,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
-from pydantic import AliasChoices, Field, SecretStr, field_validator
+from pydantic import AliasChoices, Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # apps/api/src/docintel/core/config.py -> repository root is five levels up.
@@ -116,6 +116,17 @@ class Settings(BaseSettings):
         if isinstance(value, str) and value.strip().lower() in {"", "none", "null"}:
             return None
         return value
+
+    @model_validator(mode="after")
+    def _model_matches_provider(self) -> Settings:
+        # The default AI_MODEL is a Claude model; a local runtime would reject it with a
+        # confusing "model not found". Fail fast with a clear message instead.
+        if self.ai_provider == "ollama" and self.ai_model.startswith("claude-"):
+            raise ValueError(
+                "AI_PROVIDER=ollama requires AI_MODEL to name a local Ollama model "
+                f"(got {self.ai_model!r})."
+            )
+        return self
 
     @property
     def max_upload_bytes(self) -> int:

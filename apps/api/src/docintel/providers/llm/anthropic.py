@@ -22,6 +22,7 @@ from docintel.core.errors import (
     AIConfigurationError,
     AIProviderError,
     AIRateLimitError,
+    AIRequestRejectedError,
     AITimeoutError,
     AIUnavailableError,
 )
@@ -204,6 +205,4 @@ def _join_text(blocks: list[Any]) -> str:
 
 
 def _non_retryable(message: str) -> AIProviderError:
-    error = AIProviderError(message)
-    error.retryable = False
-    return error
+    return AIRequestRejectedError(message)

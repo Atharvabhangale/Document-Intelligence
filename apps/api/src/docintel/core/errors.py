@@ -114,6 +114,15 @@ class AIProviderError(DocIntelError):
     default_message = "The AI service returned an error."
 
 
+class AIRequestRejectedError(AIProviderError):
+    """The AI service rejected the request itself (e.g. HTTP 400/413); retrying won't help."""
+
+    code = "ai_request_rejected"
+    http_status = 502
+    retryable = False
+    default_message = "The AI service rejected the request."
+
+
 class AIConfigurationError(AIProviderError):
     code = "ai_not_configured"
     http_status = 503

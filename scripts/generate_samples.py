@@ -220,9 +220,7 @@ SOP_00123 = SopContent(
     effective_date="2026-03-21",
     owner="J. Alvarez, Maintenance Engineering",
     approver="K. Lindqvist, Maintenance Manager (2026-03-14)",
-    applies_to=(
-        "Greenfield Plant \u2013 Machining Cells 1\u20133, machines VMC-01 to VMC-06"
-    ),
+    applies_to=("Greenfield Plant \u2013 Machining Cells 1\u20133, machines VMC-01 to VMC-06"),
     sections=(
         section(
             "Purpose",
@@ -523,8 +521,7 @@ SOP_00123 = SopContent(
                 "Isolate and lock out all energy sources in accordance with SOP-00087 "
                 "and the energy control procedure posted on the machine (main "
                 "disconnect Q1, pneumatic supply valve V-1).",
-                "Open the accumulator bleed valve and verify that gauge PG-1 reads 0 "
-                "bar.",
+                "Open the accumulator bleed valve and verify that gauge PG-1 reads 0 bar.",
                 "Verify zero energy by attempting to start the machine from the "
                 "control panel (try-out) as required by SOP-00087. Return all controls "
                 "to the off position.",
@@ -847,17 +844,11 @@ SOP_00087 = SopContent(
             specification_table(
                 (
                     "Personal safety padlock",
-                    (
-                        "Red, keyed different, one key per lock, marked with the "
-                        "owner's name"
-                    ),
+                    ("Red, keyed different, one key per lock, marked with the owner's name"),
                 ),
                 (
                     "Danger tag",
-                    (
-                        '"DANGER \u2013 DO NOT OPERATE", with name, department, date '
-                        "and phone"
-                    ),
+                    ('"DANGER \u2013 DO NOT OPERATE", with name, department, date and phone'),
                 ),
                 ("Lockout hasp", "Steel, for up to 6 locks"),
                 (
@@ -961,14 +952,11 @@ SOP_00087 = SopContent(
                 "guards and safety devices are reinstalled and functional.",
                 "Confirm that all persons are clear and notify the affected employees "
                 "that the equipment will be re-energized.",
-                "Each lock shall be removed only by the authorized employee who "
-                "applied it.",
+                "Each lock shall be removed only by the authorized employee who applied it.",
                 "Remove the locks and tags, restore the energy sources in the order "
                 "given in the ECP and perform a functional test of the equipment.",
             ),
-            SubHeading(
-                "7.7 Removal of a lock in the absence of the authorized employee"
-            ),
+            SubHeading("7.7 Removal of a lock in the absence of the authorized employee"),
             steps(
                 "7.7",
                 "If the authorized employee who applied a lock is not on site and "
@@ -991,14 +979,10 @@ SOP_00087 = SopContent(
                 "The inspection is acceptable only when all of the following are met:",
             ),
             bullets(
-                "All energy sources and isolation points in the ECP match the "
-                "installed equipment.",
-                "Every isolation point was locked with a personal lock and a completed "
-                "tag.",
-                "Stored energy was released and zero energy was verified before work "
-                "began.",
-                "The authorized employees could explain the ECP and their "
-                "responsibilities.",
+                "All energy sources and isolation points in the ECP match the installed equipment.",
+                "Every isolation point was locked with a personal lock and a completed tag.",
+                "Stored energy was released and zero energy was verified before work began.",
+                "The authorized employees could explain the ECP and their responsibilities.",
             ),
             steps(
                 "8",
@@ -1013,13 +997,11 @@ SOP_00087 = SopContent(
             "Records",
             steps(
                 "9",
-                "ECPs are posted at each machine and reviewed whenever the equipment "
-                "is modified.",
+                "ECPs are posted at each machine and reviewed whenever the equipment is modified.",
                 "Annual periodic inspection records (F-087-03), Group Lockout Logs "
                 "(F-087-02) and lock removal records (F-087-04) shall be retained for "
                 "3 years.",
-                "Training records shall be retained for the duration of employment "
-                "plus 3 years.",
+                "Training records shall be retained for the duration of employment plus 3 years.",
             ),
         ),
         section(
@@ -1030,19 +1012,13 @@ SOP_00087 = SopContent(
                     "B.1",
                     "2025-06-30",
                     "M. Chen",
-                    (
-                        "Revision started: group lockout and shift change requirements "
-                        "added."
-                    ),
+                    ("Revision started: group lockout and shift change requirements added."),
                 ),
                 (
                     "B.2",
                     "2026-01-22",
                     "M. Chen",
-                    (
-                        "Accumulator bleed-down verification and form F-087-04 "
-                        "added. Released."
-                    ),
+                    ("Accumulator bleed-down verification and form F-087-04 added. Released."),
                 ),
             ),
         ),
@@ -1093,10 +1069,7 @@ SOP_00141 = SopContent(
                 ("MM-HP250", "OEM Operating Manual, 250 t hydraulic press"),
                 (
                     "ISO 16092-3",
-                    (
-                        "Machine tools safety \u2013 Presses \u2013 Part 3: Hydraulic "
-                        "presses"
-                    ),
+                    ("Machine tools safety \u2013 Presses \u2013 Part 3: Hydraulic presses"),
                 ),
             ),
         ),
@@ -1120,17 +1093,11 @@ SOP_00141 = SopContent(
                 ),
                 (
                     "Quality inspector",
-                    (
-                        "Performs the first-article inspection and releases or rejects "
-                        "the setup."
-                    ),
+                    ("Performs the first-article inspection and releases or rejects the setup."),
                 ),
                 (
                     "Production Supervisor",
-                    (
-                        "Plans changeovers and ensures that only qualified setters "
-                        "perform them."
-                    ),
+                    ("Plans changeovers and ensures that only qualified setters perform them."),
                 ),
             ),
         ),
@@ -1147,8 +1114,7 @@ SOP_00141 = SopContent(
                 "Die changes shall be performed with the press locked out in "
                 "accordance with SOP-00087, except for the steps that require power, "
                 "which are performed in inch mode from the two-hand control station.",
-                "Safety blocks shall be installed whenever work is performed between "
-                "the dies.",
+                "Safety blocks shall be installed whenever work is performed between the dies.",
                 "Dies shall be lifted only with the 2 t overhead crane and certified "
                 "lifting equipment; nobody may stand under a suspended load.",
                 "Safety glasses, safety shoes (S3), cut-resistant gloves for handling "
@@ -1175,8 +1141,7 @@ SOP_00141 = SopContent(
                 "7.1",
                 "Confirm that the die number on the production order matches the die "
                 "and the Die Setup Sheet (DSS).",
-                'Check that the die carries a green "Ready for Use" tag from the tool '
-                "room.",
+                'Check that the die carries a green "Ready for Use" tag from the tool room.',
                 "Read the required tonnage, shut height and cushion pressure from the "
                 "DSS and enter them on F-141-01.",
                 "Target changeover time: TBD (to be agreed with Production).",
@@ -1184,11 +1149,9 @@ SOP_00141 = SopContent(
             SubHeading("7.2 Removal of the previous die"),
             steps(
                 "7.2",
-                "Lower the ram in inch mode until the upper die rests on the lower "
-                "die.",
+                "Lower the ram in inch mode until the upper die rests on the lower die.",
                 "Release the upper die clamps and raise the ram to the top position.",
-                "Lock out the press in accordance with SOP-00087 and install the "
-                "safety blocks.",
+                "Lock out the press in accordance with SOP-00087 and install the safety blocks.",
                 "Release the lower die clamps, move the die onto the die cart and "
                 "return it to the die library.",
             ),
@@ -1277,9 +1240,7 @@ SOP_00141 = SopContent(
         ),
         section(
             "Revision History",
-            revision_history(
-                ("A.1", "2026-09-02", "R. Okafor", "Initial draft for review.")
-            ),
+            revision_history(("A.1", "2026-09-02", "R. Okafor", "Initial draft for review.")),
         ),
     ),
 )
@@ -1290,10 +1251,7 @@ SOP_00056 = SopContent(
     effective_date="2025-11-17",
     owner="S. Patel, Process Engineering",
     approver="K. Lindqvist, Maintenance Manager (2025-11-05)",
-    applies_to=(
-        "Greenfield Plant \u2013 Machining Cells 1\u20133 and central coolant "
-        "system CS-1"
-    ),
+    applies_to=("Greenfield Plant \u2013 Machining Cells 1\u20133 and central coolant system CS-1"),
     scanned_page=3,
     sections=(
         section(
@@ -1346,17 +1304,11 @@ SOP_00056 = SopContent(
                 ),
                 (
                     "Maintenance Supervisor",
-                    (
-                        "Reviews the Coolant Log weekly and arranges sump cleaning "
-                        "when required."
-                    ),
+                    ("Reviews the Coolant Log weekly and arranges sump cleaning when required."),
                 ),
                 (
                     "EHS",
-                    (
-                        "Runs the health program in EHS-021 and approves the use of "
-                        "biocides."
-                    ),
+                    ("Runs the health program in EHS-021 and approves the use of biocides."),
                 ),
             ),
         ),
@@ -1375,8 +1327,7 @@ SOP_00056 = SopContent(
                 "handling concentrate or biocide.",
                 "Biocides may only be added by trained coolant technicians and only in "
                 "the dose approved by EHS.",
-                "Coolant spills must be cleaned up immediately; wet floors are a slip "
-                "hazard.",
+                "Coolant spills must be cleaned up immediately; wet floors are a slip hazard.",
             ),
         ),
         section(
@@ -1389,10 +1340,7 @@ SOP_00056 = SopContent(
                 ("Distilled water", "For zeroing the refractometer"),
                 (
                     "pH meter",
-                    (
-                        "Resolution 0.1 pH, calibrated weekly with pH 7.0 and pH 10.0 "
-                        "buffers"
-                    ),
+                    ("Resolution 0.1 pH, calibrated weekly with pH 7.0 and pH 10.0 buffers"),
                 ),
                 (
                     "Dip slides",
@@ -1561,9 +1509,7 @@ SOP_00056 = SopContent(
     ),
 )
 
-CONTENT: dict[str, SopContent] = {
-    c.number: c for c in (SOP_00123, SOP_00087, SOP_00141, SOP_00056)
-}
+CONTENT: dict[str, SopContent] = {c.number: c for c in (SOP_00123, SOP_00087, SOP_00141, SOP_00056)}
 
 # --- Rendering ------------------------------------------------------------------------
 
@@ -1585,9 +1531,7 @@ NOTICE_COLORS = {
     "NOTE": (colors.HexColor("#1F3A5F"), colors.HexColor("#EAF1F8")),
 }
 
-BODY = ParagraphStyle(
-    "body", fontName="Helvetica", fontSize=9.5, leading=13, textColor=INK
-)
+BODY = ParagraphStyle("body", fontName="Helvetica", fontSize=9.5, leading=13, textColor=INK)
 STYLES = {
     "body": BODY,
     "label": ParagraphStyle(
@@ -1601,9 +1545,7 @@ STYLES = {
         leading=24,
         textColor=ACCENT,
     ),
-    "subtitle": ParagraphStyle(
-        "subtitle", parent=BODY, fontSize=11.5, leading=15, textColor=INK
-    ),
+    "subtitle": ParagraphStyle("subtitle", parent=BODY, fontSize=11.5, leading=15, textColor=INK),
     "h1": ParagraphStyle(
         "h1",
         parent=BODY,
@@ -1663,17 +1605,13 @@ _KEEP_TOGETHER = re.compile(r"\b(ISO VG|pH|Table|Section|section) (?=\d)")
 def markup(text: str) -> str:
     """Escape plain text for a ReportLab Paragraph and bind numbers to their units."""
     text = _NUMBER_UNIT.sub("\u00a0", text)
-    text = _KEEP_TOGETHER.sub(
-        lambda m: m.group(1).replace(" ", "\u00a0") + "\u00a0", text
-    )
+    text = _KEEP_TOGETHER.sub(lambda m: m.group(1).replace(" ", "\u00a0") + "\u00a0", text)
     return escape(text)
 
 
 def _table(block: DataTable) -> list[Flowable]:
     data = [[Paragraph(markup(h), STYLES["cell_head"]) for h in block.header]]
-    data += [
-        [Paragraph(markup(cell), STYLES["cell"]) for cell in row] for row in block.rows
-    ]
+    data += [[Paragraph(markup(cell), STYLES["cell"]) for cell in row] for row in block.rows]
     table = Table(data, colWidths=[w * FRAME_WIDTH for w in block.widths], repeatRows=1)
     table.setStyle(
         TableStyle(
@@ -1720,15 +1658,10 @@ def _notice(block: Notice) -> list[Flowable]:
 
 
 def _step_numbers(block: Steps) -> list[str]:
-    return [
-        f"{block.prefix}.{n}"
-        for n in range(block.start, block.start + len(block.items))
-    ]
+    return [f"{block.prefix}.{n}" for n in range(block.start, block.start + len(block.items))]
 
 
-def _flowables(
-    block: Block, render_scan: Callable[[ScannedPage], Flowable]
-) -> list[Flowable]:
+def _flowables(block: Block, render_scan: Callable[[ScannedPage], Flowable]) -> list[Flowable]:
     match block:
         case Para(text):
             return [Paragraph(markup(text), BODY), Spacer(1, 4)]
@@ -1741,8 +1674,7 @@ def _flowables(
             ]
         case Bullets(items):
             return [
-                Paragraph(markup(item), STYLES["bullet"], bulletText="\u2013")
-                for item in items
+                Paragraph(markup(item), STYLES["bullet"], bulletText="\u2013") for item in items
             ]
         case Roles(items):
             return [
@@ -1817,9 +1749,7 @@ def build_story(
 ) -> list[Flowable]:
     titles = tuple(section.title for section in content.sections)
     if titles != SECTION_TITLES:
-        raise ValueError(
-            f"{content.number}: sections must be {SECTION_TITLES}, got {titles}"
-        )
+        raise ValueError(f"{content.number}: sections must be {SECTION_TITLES}, got {titles}")
     story = _title_block(meta, content)
     for number, section in enumerate(content.sections, start=1):
         heading = Paragraph(markup(f"{number} {section.title}"), STYLES["h1"])
@@ -1914,18 +1844,14 @@ class SopDocTemplate(BaseDocTemplate):
         canvas.setFillColor(MUTED)
         canvas.setFont("Helvetica", 8)
         canvas.drawString(MARGIN_X, PAGE_HEIGHT - 17.5 * mm, meta.name)
-        canvas.drawRightString(
-            right, PAGE_HEIGHT - 17.5 * mm, "Standard Operating Procedure"
-        )
+        canvas.drawRightString(right, PAGE_HEIGHT - 17.5 * mm, "Standard Operating Procedure")
         canvas.setStrokeColor(RULE)
         canvas.setLineWidth(0.6)
         canvas.line(MARGIN_X, PAGE_HEIGHT - 20 * mm, right, PAGE_HEIGHT - 20 * mm)
         if self.content.draft:
             canvas.setFillColor(DRAFT_RED)
             canvas.setFont("Helvetica-Bold", 10)
-            canvas.drawCentredString(
-                PAGE_WIDTH / 2, PAGE_HEIGHT - 26 * mm, DRAFT_BANNER
-            )
+            canvas.drawCentredString(PAGE_WIDTH / 2, PAGE_HEIGHT - 26 * mm, DRAFT_BANNER)
         # Footer
         canvas.line(MARGIN_X, 17 * mm, right, 17 * mm)
         canvas.setFillColor(MUTED)
@@ -1933,9 +1859,7 @@ class SopDocTemplate(BaseDocTemplate):
         canvas.drawString(MARGIN_X, 12.5 * mm, CONTROLLED_NOTICE)
         canvas.setFillColor(INK)
         canvas.setFont("Helvetica-Bold", 8.5)
-        canvas.drawRightString(
-            right, 12.5 * mm, self.page_label(canvas.getPageNumber())
-        )
+        canvas.drawRightString(right, 12.5 * mm, self.page_label(canvas.getPageNumber()))
         canvas.setFillColor(MUTED)
         canvas.setFont("Helvetica", 6.5)
         canvas.drawString(MARGIN_X, 8.5 * mm, SYNTHETIC_NOTICE)
@@ -1947,9 +1871,7 @@ class SopDocTemplate(BaseDocTemplate):
 SCAN_DPI = 150
 SCAN_SIZE = (round(PAGE_WIDTH / 72 * SCAN_DPI), round(PAGE_HEIGHT / 72 * SCAN_DPI))
 # Pillow's bundled font covers ASCII and a little Latin-1 only.
-_SCAN_ASCII = str.maketrans(
-    {"\u2013": "-", "\u2014": "-", "\u00d7": "x", "\u00b5": "u"}
-)
+_SCAN_ASCII = str.maketrans({"\u2013": "-", "\u2014": "-", "\u00d7": "x", "\u00b5": "u"})
 
 
 def _wrap(draw: ImageDraw.ImageDraw, text: str, font: Any, width: float) -> list[str]:
@@ -1991,9 +1913,7 @@ def render_scan_png(
         font=small_font,
         fill=90,
     )
-    draw.text(
-        (width - margin, height - 130), footer, font=small_font, fill=40, anchor="ra"
-    )
+    draw.text((width - margin, height - 130), footer, font=small_font, fill=40, anchor="ra")
     draw.text(
         (margin, height - 100),
         SYNTHETIC_NOTICE.translate(_SCAN_ASCII),
@@ -2008,14 +1928,10 @@ def render_scan_png(
         match block:
             case SubHeading(text):
                 y += 18
-                draw.text(
-                    (margin, y), text.translate(_SCAN_ASCII), font=heading_font, fill=25
-                )
+                draw.text((margin, y), text.translate(_SCAN_ASCII), font=heading_font, fill=25)
                 y += 48
             case Para(text):
-                for line in _wrap(
-                    draw, text.translate(_SCAN_ASCII), body_font, text_width
-                ):
+                for line in _wrap(draw, text.translate(_SCAN_ASCII), body_font, text_width):
                     draw.text((margin, y), line, font=body_font, fill=30)
                     y += 36
                 y += 12
@@ -2054,9 +1970,7 @@ class BuiltPdf:
     scan_pages: tuple[int, ...]
 
 
-def _render(
-    meta: SopMetadata, content: SopContent, total_pages: int | None
-) -> BuiltPdf:
+def _render(meta: SopMetadata, content: SopContent, total_pages: int | None) -> BuiltPdf:
     buffer = io.BytesIO()
     doc = SopDocTemplate(buffer, meta, content, total_pages)
     scan_index = 0
@@ -2098,16 +2012,13 @@ def load_catalog(path: Path = CATALOG_PATH) -> list[dict[str, Any]]:
     return list(catalog["documents"])
 
 
-def generate(
-    out_dir: Path, catalog_path: Path = CATALOG_PATH
-) -> list[tuple[Path, BuiltPdf]]:
+def generate(out_dir: Path, catalog_path: Path = CATALOG_PATH) -> list[tuple[Path, BuiltPdf]]:
     """Generate one PDF per catalog entry into ``out_dir``; return the files written."""
     entries = load_catalog(catalog_path)
     numbers = {entry["metadata"]["number"] for entry in entries}
     if numbers != set(CONTENT):
         raise ValueError(
-            f"catalog documents {sorted(numbers)} do not match the sample content "
-            f"{sorted(CONTENT)}"
+            f"catalog documents {sorted(numbers)} do not match the sample content {sorted(CONTENT)}"
         )
     out_dir.mkdir(parents=True, exist_ok=True)
     written: list[tuple[Path, BuiltPdf]] = []
@@ -2135,9 +2046,7 @@ def _display(path: Path) -> str:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(
-        description="Generate the synthetic SOP sample PDFs."
-    )
+    parser = argparse.ArgumentParser(description="Generate the synthetic SOP sample PDFs.")
     parser.add_argument(
         "--out",
         type=Path,

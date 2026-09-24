@@ -22,17 +22,12 @@ TARGET = REPO_ROOT / "packages" / "schemas" / "document-intelligence.v1.schema.j
 
 
 def render() -> str:
-    return (
-        json.dumps(api_json_schema(), indent=2, ensure_ascii=False, sort_keys=True)
-        + "\n"
-    )
+    return json.dumps(api_json_schema(), indent=2, ensure_ascii=False, sort_keys=True) + "\n"
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--check", action="store_true", help="exit 1 if the file is stale"
-    )
+    parser.add_argument("--check", action="store_true", help="exit 1 if the file is stale")
     args = parser.parse_args()
     content = render()
     if args.check:

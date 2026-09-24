@@ -21,7 +21,7 @@ from typing import TypeVar
 
 from pydantic import BaseModel
 
-from docintel.core.errors import AIProviderError
+from docintel.core.errors import AIRequestRejectedError
 from docintel.providers.llm.base import LLMProvider, LLMRequest, LLMResponse, LLMUsage
 from docintel.schemas.report import (
     LLMAction,
@@ -273,9 +273,7 @@ class DevFakeLLMProvider(LLMProvider):
             return LLMRisksOutput(risks=risks, limitations=_limitations(doc, notes))
         if request.schema_name == "ask":
             return _answer(doc, _question(request.instruction))
-        error = AIProviderError("The development AI provider does not support this task.")
-        error.retryable = False
-        raise error
+        raise AIRequestRejectedError("The development AI provider does not support this task.")
 
 
 # --- Parsing ---------------------------------------------------------------------------------

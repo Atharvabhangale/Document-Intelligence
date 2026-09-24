@@ -21,6 +21,7 @@ import httpx
 from docintel.core.errors import (
     AIConfigurationError,
     AIProviderError,
+    AIRequestRejectedError,
     AITimeoutError,
     AIUnavailableError,
 )
@@ -133,9 +134,7 @@ class OllamaProvider(LLMProvider):
             )
         if status >= 500:
             raise AIUnavailableError("The local AI service (Ollama) returned a server error.")
-        error = AIProviderError("The local AI service (Ollama) rejected the request.")
-        error.retryable = False
-        raise error
+        raise AIRequestRejectedError("The local AI service (Ollama) rejected the request.")
 
     def _parse_payload(self, response: httpx.Response) -> dict[str, Any]:
         try:

@@ -12,6 +12,7 @@ import pytest
 from docintel.core.errors import (
     AIConfigurationError,
     AIProviderError,
+    AIRequestRejectedError,
     AITimeoutError,
     AIUnavailableError,
 )
@@ -227,7 +228,8 @@ def test_400_maps_to_non_retryable_provider_error() -> None:
     with pytest.raises(AIProviderError) as info:
         provider.generate_json(make_request())
 
-    assert type(info.value) is AIProviderError
+    assert type(info.value) is AIRequestRejectedError
+    assert info.value.code == "ai_request_rejected"
     assert info.value.retryable is False
     assert "invalid format schema" not in info.value.message
 
