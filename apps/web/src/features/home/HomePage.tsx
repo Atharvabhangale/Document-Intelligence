@@ -20,7 +20,11 @@ export function HomePage({ health, onOpenDocument }: HomePageProps) {
       </div>
       <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
         <WindchillDocumentsCard onOpen={onOpenDocument} />
-        <UploadCard maxUploadMb={health?.limits.maxUploadMb} onUploaded={onOpenDocument} />
+        <UploadCard
+          maxUploadMb={health?.limits.maxUploadMb}
+          maxPages={health?.limits.maxPages}
+          onUploaded={onOpenDocument}
+        />
       </div>
       <RecentDocuments onOpen={onOpenDocument} />
     </div>

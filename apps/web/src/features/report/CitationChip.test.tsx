@@ -16,7 +16,16 @@ describe("CitationChip", () => {
     render(<CitationChip citation={citation("C4")} onOpen={() => undefined} />);
     const chip = screen.getByRole("button", { name: "Source: page 3, verified" });
     expect(chip).toHaveTextContent("p. 3");
-    expect(chip).toHaveAttribute("title", expect.stringContaining("Verified"));
+    expect(chip).toHaveAttribute("title", "C4 · Verified: “The pressure shall be 55–65 bar.”");
+  });
+
+  it("previews long quotes in the tooltip", () => {
+    const long = { ...citation("C8"), quote: `${citation("C8").quote} `.repeat(3) };
+    render(<CitationChip citation={long} onOpen={() => undefined} />);
+    const title = screen.getByRole("button").getAttribute("title") ?? "";
+    expect(title.startsWith("C8 · Verified: “Inspect filters regularly")).toBe(true);
+    expect(title.endsWith("…”")).toBe(true);
+    expect(title.length).toBeLessThan(170);
   });
 
   it("points relocated citations at the page where the quote was found", () => {

@@ -1,4 +1,4 @@
-import { Cpu, ScanText, TriangleAlert } from "lucide-react";
+import { Cpu, RefreshCw, ScanText, TriangleAlert } from "lucide-react";
 
 import type { HealthResponse } from "../api/types";
 import { cx } from "../lib/cx";
@@ -8,9 +8,11 @@ interface AppBarProps {
   health: HealthResponse | null;
   healthFailed: boolean;
   onHome: () => void;
+  /** Check the service again after a failed health request. */
+  onRetryHealth: () => void;
 }
 
-export function AppBar({ health, healthFailed, onHome }: AppBarProps) {
+export function AppBar({ health, healthFailed, onHome, onRetryHealth }: AppBarProps) {
   return (
     <header className="on-dark bg-appbar text-white">
       <div className="mx-auto flex h-12 max-w-[1600px] items-center justify-between gap-3 px-4">
@@ -31,19 +33,35 @@ export function AppBar({ health, healthFailed, onHome }: AppBarProps) {
             for Windchill
           </span>
         </a>
-        <ModelPill health={health} failed={healthFailed} />
+        <ModelPill health={health} failed={healthFailed} onRetry={onRetryHealth} />
       </div>
     </header>
   );
 }
 
-function ModelPill({ health, failed }: { health: HealthResponse | null; failed: boolean }) {
+interface ModelPillProps {
+  health: HealthResponse | null;
+  failed: boolean;
+  onRetry: () => void;
+}
+
+function ModelPill({ health, failed, onRetry }: ModelPillProps) {
   if (failed) {
     return (
-      <span className="inline-flex h-6 items-center gap-1.5 rounded-full bg-danger/25 px-2.5 text-xs font-medium text-white">
+      <button
+        type="button"
+        onClick={onRetry}
+        title="The Document Intelligence service could not be reached. Select to check again."
+        className="inline-flex h-6 items-center gap-1.5 rounded-full bg-danger/25 px-2.5 text-xs font-medium whitespace-nowrap text-white transition-colors hover:bg-danger/40"
+      >
         <TriangleAlert aria-hidden="true" className="size-3.5" />
         Service unavailable
-      </span>
+        <span aria-hidden="true" className="text-appbar-muted">
+          ·
+        </span>
+        <RefreshCw aria-hidden="true" className="size-3" />
+        Retry
+      </button>
     );
   }
   if (!health) {
@@ -56,7 +74,6 @@ function ModelPill({ health, failed }: { health: HealthResponse | null; failed: 
   }
   const { ai } = health;
   const configured = ai.configured;
-  const label = `${ai.model} · ${providerLabel(ai.provider)}`;
   return (
     <span
       title={
@@ -75,7 +92,11 @@ function ModelPill({ health, failed }: { health: HealthResponse | null; failed: 
         <TriangleAlert aria-hidden="true" className="size-3.5 shrink-0" />
       )}
       <span className="sr-only">AI model: </span>
-      <span className="truncate font-mono tabular-nums">{label}</span>
+      <span className="truncate">
+        <span className="font-mono tabular-nums">{ai.model}</span>
+        {" · "}
+        {providerLabel(ai.provider)}
+      </span>
       {configured ? null : <span className="whitespace-nowrap">· not configured</span>}
     </span>
   );

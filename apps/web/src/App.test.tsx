@@ -69,7 +69,9 @@ describe("App", () => {
     expect(screen.getByRole("note", { name: "Development environment" })).toHaveTextContent(
       "DEVELOPMENT ONLY — Mock Windchill data. Not connected to Windchill.",
     );
-    expect(screen.getByText("claude-haiku-4-5-20251001 · Anthropic")).toBeInTheDocument();
+    expect(screen.getByTitle("AI model: claude-haiku-4-5-20251001 (Anthropic)")).toHaveTextContent(
+      "claude-haiku-4-5-20251001 · Anthropic",
+    );
   });
 
   it("shows the not-analyzed state without autorun and analyzes on request", async () => {
@@ -148,6 +150,42 @@ describe("App", () => {
       await screen.findByRole("heading", { level: 1, name: "Machine Maintenance SOP" }),
     ).toBeInTheDocument();
     expect(window.location.search).toBe(`?doc=${DOCUMENT_ID}`);
+  });
+
+  it("names the Windchill reference when a launch fails", async () => {
+    window.history.replaceState(null, "", "/?wtRef=mock%3A%2F%2Fwtdocument%2FNOPE%2FZ.9&autorun=1");
+    mockBackend({
+      "GET /api/health": () => json(200, health),
+      "POST /api/documents/from-windchill": () =>
+        json(404, {
+          error: { code: "document_not_found", message: "Not found.", retryable: false },
+        }),
+    });
+    render(<App />);
+    expect(await screen.findByText("Document not found")).toBeInTheDocument();
+    expect(screen.getByText("mock://wtdocument/NOPE/Z.9")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "All documents" })).toBeInTheDocument();
+  });
+
+  it("offers to check the service again when the health request fails", async () => {
+    let healthy = false;
+    mockBackend({
+      "GET /api/health": () =>
+        healthy ? json(200, health) : new Response("Bad Gateway", { status: 502 }),
+      "GET /api/windchill/documents": () => json(200, windchillDocuments),
+      "GET /api/documents": () => json(200, { items: [] }),
+    });
+    const user = userEvent.setup();
+    render(<App />);
+
+    const retry = await screen.findByRole("button", { name: /Service unavailable/ });
+    expect(screen.queryByRole("note", { name: "Development environment" })).toBeNull();
+    healthy = true;
+    await user.click(retry);
+    expect(
+      await screen.findByTitle("AI model: claude-haiku-4-5-20251001 (Anthropic)"),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("note", { name: "Development environment" })).toBeInTheDocument();
   });
 
   it("shows a document error with a way back", async () => {

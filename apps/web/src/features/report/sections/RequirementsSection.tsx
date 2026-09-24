@@ -58,8 +58,7 @@ export function RequirementsSection({
                 selected ? "bg-surface text-ink shadow-card" : "text-muted hover:text-ink",
               )}
             >
-              {option.label}{" "}
-              <span className={selected ? "text-muted" : "text-muted/80"}>{count}</span>
+              {option.label} <span className="text-muted">{count}</span>
             </button>
           );
         })}

@@ -264,7 +264,7 @@ export function DocumentWorkspace({
         </div>
         <aside
           aria-label="Analysis details"
-          className="min-w-0 wide:sticky wide:top-4 wide:max-h-[calc(100vh-2rem)] wide:overflow-y-auto"
+          className="min-w-0 wide:sticky wide:top-2 wide:max-h-[calc(100vh-1rem)] wide:overflow-y-auto"
         >
           {/* While re-analyzing, the previous provenance would describe a report not shown. */}
           <AnalysisRail record={doc} report={analyzing ? null : report} />

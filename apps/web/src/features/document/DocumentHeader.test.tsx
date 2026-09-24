@@ -57,6 +57,23 @@ describe("DocumentHeader", () => {
     expect(screen.getByText("Uploaded file (development)")).toBeInTheDocument();
   });
 
+  it("shows the upload time for uploaded files without source-system dates", () => {
+    const upload: DocumentRecord = {
+      ...documentRecord,
+      source: "upload",
+      sourceProvider: "upload",
+      metadata: { name: "Uploaded procedure" },
+    };
+    render(<DocumentHeader record={upload} />);
+    const uploaded = screen.getByText("(uploaded)");
+    expect(uploaded.parentElement?.querySelector("time")).toHaveAttribute(
+      "datetime",
+      documentRecord.createdAt,
+    );
+    expect(screen.getByText("Document")).toBeInTheDocument();
+    expect(screen.getByText("5 pages · 18 KB")).toBeInTheDocument();
+  });
+
   it("lists pages that need OCR", () => {
     render(<DocumentHeader record={withChanges({ pagesNeedingOcr: [3] })} />);
     expect(screen.getByRole("note")).toHaveTextContent(

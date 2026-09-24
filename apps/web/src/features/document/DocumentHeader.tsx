@@ -92,28 +92,35 @@ export function DocumentHeader({ record, actions }: DocumentHeaderProps) {
               </>
             ) : metadata.modifiedBy ? (
               <span className="text-muted">by {metadata.modifiedBy}</span>
+            ) : record.source === "upload" ? (
+              // Uploads carry no source-system dates: show when the file was uploaded instead.
+              <>
+                <time dateTime={record.createdAt}>{formatDateTime(record.createdAt)}</time>
+                <span className="text-muted"> (uploaded)</span>
+              </>
             ) : (
               "—"
             )}
           </Field>
           <Field label="Location">{metadata.location ?? "—"}</Field>
           <Field label="Primary content">
-            <span className="break-all">{content.filename}</span>
-            <span className="text-muted tabular-nums">
-              {" · "}
-              {extraction.pageCount} {pluralize(extraction.pageCount, "page")} ·{" "}
-              {formatBytes(content.sizeBytes)}
+            <span className="block break-all">{content.filename}</span>
+            <span className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5">
+              <span className="whitespace-nowrap text-muted tabular-nums">
+                {extraction.pageCount} {pluralize(extraction.pageCount, "page")} ·{" "}
+                {formatBytes(content.sizeBytes)}
+              </span>
+              <a
+                href={contentUrl(record.id)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-fit items-center gap-1 rounded text-primary underline-offset-2 hover:text-primary-hover hover:underline"
+              >
+                <ExternalLink aria-hidden="true" className="size-3.5" />
+                Open PDF
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
             </span>
-            <a
-              href={contentUrl(record.id)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-0.5 flex w-fit items-center gap-1 text-primary underline-offset-2 hover:text-primary-hover hover:underline"
-            >
-              <ExternalLink aria-hidden="true" className="size-3.5" />
-              Open PDF
-              <span className="sr-only"> (opens in a new tab)</span>
-            </a>
           </Field>
           <Field label="Source">{sourceLabel(record)}</Field>
         </dl>

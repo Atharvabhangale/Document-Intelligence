@@ -30,10 +30,12 @@ export function ExecutiveSummaryCard({
       <div className="space-y-4 px-4 py-4">
         <div>
           <p className="text-xs font-semibold tracking-wide text-muted uppercase">Purpose</p>
-          <p className="mt-1 text-muted">{summary.purpose}</p>
+          <p className="mt-1 max-w-[80ch] text-muted">{summary.purpose}</p>
         </div>
         <div className="space-y-2">
-          <p className="text-[15px] leading-relaxed text-ink">{summary.executive.text}</p>
+          <p className="max-w-[80ch] text-[15px] leading-relaxed text-ink">
+            {summary.executive.text}
+          </p>
           <CitationChips
             citations={resolveCitations(summary.executive.citationIds, index)}
             onOpen={onOpenCitation}
@@ -61,7 +63,7 @@ export function KeyPointsCard({ summary, index, onOpenCitation, ...controls }: S
                 {position + 1}
               </span>
               <div className="min-w-0 flex-1 space-y-1.5">
-                <p className="text-ink">{point.text}</p>
+                <p className="max-w-[100ch] text-ink">{point.text}</p>
                 <CitationChips
                   citations={resolveCitations(point.citationIds, index)}
                   onOpen={onOpenCitation}

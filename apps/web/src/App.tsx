@@ -22,6 +22,7 @@ export function App() {
   const [autorunFor, setAutorunFor] = useState<string | null>(null);
   const [health, setHealth] = useState<HealthResponse | null>(null);
   const [healthFailed, setHealthFailed] = useState(false);
+  const [healthAttempt, setHealthAttempt] = useState(0);
   const [documentDevelopmentOnly, setDocumentDevelopmentOnly] = useState(false);
 
   useEffect(() => {
@@ -35,6 +36,7 @@ export function App() {
 
   useEffect(() => {
     const controller = new AbortController();
+    setHealthFailed(false);
     getHealth({ signal: controller.signal })
       .then((value) => {
         setHealth(value);
@@ -44,7 +46,9 @@ export function App() {
         if (!isAbortError(error)) setHealthFailed(true);
       });
     return () => controller.abort();
-  }, []);
+  }, [healthAttempt]);
+
+  const retryHealth = useCallback(() => setHealthAttempt((attempt) => attempt + 1), []);
 
   const navigate = useCallback((next: Route, options: NavigateOptions = {}) => {
     const url = `${window.location.pathname}${routeToSearch(next)}`;
@@ -80,7 +84,12 @@ export function App() {
       >
         Skip to content
       </a>
-      <AppBar health={health} healthFailed={healthFailed} onHome={goHome} />
+      <AppBar
+        health={health}
+        healthFailed={healthFailed}
+        onHome={goHome}
+        onRetryHealth={retryHealth}
+      />
       <DevelopmentBanner
         mockWindchill={mockWindchill}
         simulatedAi={health?.ai.developmentOnly === true}

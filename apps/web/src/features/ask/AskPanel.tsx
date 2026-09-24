@@ -258,7 +258,7 @@ function Answer({
   }
   return (
     <div className="space-y-2">
-      <p className="whitespace-pre-line text-ink">{response.answer}</p>
+      <p className="max-w-[90ch] whitespace-pre-line text-ink">{response.answer}</p>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <CitationChips citations={response.citations} onOpen={onOpenCitation} />
         <span className="text-xs text-muted">AI-generated · {meta}</span>

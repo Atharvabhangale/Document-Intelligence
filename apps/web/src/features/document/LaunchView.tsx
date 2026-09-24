@@ -36,15 +36,21 @@ export function LaunchView({ reference, onOpened, onHome }: LaunchViewProps) {
   return (
     <div className="mx-auto max-w-2xl py-6">
       {error ? (
-        <ErrorState
-          error={error}
-          onRetry={() => setAttempt((value) => value + 1)}
-          actions={
-            <Button size="sm" icon={<ArrowLeft />} onClick={onHome}>
-              All documents
-            </Button>
-          }
-        />
+        <div className="space-y-2">
+          <ErrorState
+            error={error}
+            onRetry={() => setAttempt((value) => value + 1)}
+            actions={
+              <Button size="sm" icon={<ArrowLeft />} onClick={onHome}>
+                All documents
+              </Button>
+            }
+          />
+          <p className="px-1 text-xs text-muted">
+            Requested Windchill reference:{" "}
+            <code className="font-mono break-all text-ink">{reference}</code>
+          </p>
+        </div>
       ) : (
         <Card className="flex items-start gap-3 px-5 py-5">
           <Spinner className="mt-0.5 text-primary" />

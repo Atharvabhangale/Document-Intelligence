@@ -1,7 +1,22 @@
 import { useEffect, useState } from "react";
 
+/** Distance (px) from the end of the page that counts as "scrolled to the bottom". */
+const BOTTOM_TOLERANCE = 4;
+
+/** True when the user has scrolled a scrollable page all the way down. */
+function atPageBottom(): boolean {
+  const { scrollHeight } = document.documentElement;
+  return (
+    window.scrollY > 0 && window.innerHeight + window.scrollY >= scrollHeight - BOTTOM_TOLERANCE
+  );
+}
+
 /**
  * The id of the section currently at the top of the viewport (for navigation highlighting).
+ *
+ * An IntersectionObserver tracks which sections cross a band just below the sticky
+ * navigation; the first of them is active. Short sections at the end of the page can never
+ * reach that band, so once the page is scrolled to the bottom the last section in view wins.
  * Falls back to the first id when IntersectionObserver is unavailable.
  */
 export function useActiveSection(ids: readonly string[], topOffset = 72): string | null {
@@ -11,21 +26,71 @@ export function useActiveSection(ids: readonly string[], topOffset = 72): string
   useEffect(() => {
     const sectionIds = key ? key.split("|") : [];
     if (typeof IntersectionObserver === "undefined" || sectionIds.length === 0) return;
-    const visible = new Map<string, boolean>();
-    const observer = new IntersectionObserver(
+
+    const inBand = new Map<string, boolean>();
+    const inView = new Map<string, boolean>();
+
+    const update = () => {
+      if (atPageBottom()) {
+        const last = sectionIds.findLast((id) => inView.get(id));
+        if (last) {
+          setActive(last);
+          return;
+        }
+      }
+      const first = sectionIds.find((id) => inBand.get(id));
+      if (first) {
+        setActive(first);
+        return;
+      }
+      // Scrolled above every section (e.g. back to the document header): the first one.
+      const firstId = sectionIds[0];
+      const firstElement = firstId ? document.getElementById(firstId) : null;
+      if (firstId && firstElement && firstElement.getBoundingClientRect().top > topOffset) {
+        setActive(firstId);
+      }
+    };
+
+    // A band just below the sticky navigation: the first section crossing it is active.
+    const bandObserver = new IntersectionObserver(
       (entries) => {
-        for (const entry of entries) visible.set(entry.target.id, entry.isIntersecting);
-        const first = sectionIds.find((id) => visible.get(id));
-        if (first) setActive(first);
+        for (const entry of entries) inBand.set(entry.target.id, entry.isIntersecting);
+        update();
       },
-      // A band just below the sticky navigation: the first section crossing it is active.
       { rootMargin: `-${topOffset}px 0px -55% 0px`, threshold: 0 },
+    );
+    // Whole viewport: which sections are visible at all (used at the bottom of the page).
+    const viewObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) inView.set(entry.target.id, entry.isIntersecting);
+        update();
+      },
+      { rootMargin: `-${topOffset}px 0px 0px 0px`, threshold: 0 },
     );
     for (const id of sectionIds) {
       const element = document.getElementById(id);
-      if (element) observer.observe(element);
+      if (!element) continue;
+      bandObserver.observe(element);
+      viewObserver.observe(element);
     }
-    return () => observer.disconnect();
+
+    // Reaching the bottom does not necessarily change any intersection: check on scroll too.
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        update();
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      bandObserver.disconnect();
+      viewObserver.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, [key, topOffset]);
 
   return active;

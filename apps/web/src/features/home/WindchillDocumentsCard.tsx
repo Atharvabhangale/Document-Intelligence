@@ -16,13 +16,15 @@ import { EmptyState } from "../../components/ui/EmptyState";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { Spinner } from "../../components/ui/Spinner";
 import { useDebouncedValue } from "../../hooks/useDebouncedValue";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { cx } from "../../lib/cx";
 import { formatDate, formatVersion } from "../../lib/format";
 import { StateBadge } from "../document/StateBadge";
 
 type ListState =
   | { status: "loading" }
-  | { status: "ready"; list: WindchillDocumentList }
+  /** `refreshing`: a new search is in flight; the previous results stay visible meanwhile. */
+  | { status: "ready"; list: WindchillDocumentList; refreshing: boolean }
   | { status: "error"; error: ApiError };
 
 interface WindchillDocumentsCardProps {
@@ -45,9 +47,11 @@ export function WindchillDocumentsCard({ onOpen }: WindchillDocumentsCardProps) 
 
   useEffect(() => {
     const controller = new AbortController();
-    setState({ status: "loading" });
+    setState((current) =>
+      current.status === "ready" ? { ...current, refreshing: true } : { status: "loading" },
+    );
     listWindchillDocuments(debouncedQuery, { signal: controller.signal })
-      .then((list) => setState({ status: "ready", list }))
+      .then((list) => setState({ status: "ready", list, refreshing: false }))
       .catch((error: unknown) => {
         if (!isAbortError(error)) setState({ status: "error", error: toApiError(error) });
       });
@@ -67,6 +71,8 @@ export function WindchillDocumentsCard({ onOpen }: WindchillDocumentsCardProps) 
   };
 
   const developmentOnly = state.status === "ready" && state.list.provider.developmentOnly;
+  const searching =
+    (state.status === "ready" && state.refreshing) || query.trim() !== debouncedQuery;
 
   return (
     <Card>
@@ -97,10 +103,16 @@ export function WindchillDocumentsCard({ onOpen }: WindchillDocumentsCardProps) 
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search by number or name"
+            placeholder="Search by number, name or location"
             autoComplete="off"
-            className="h-8 w-full rounded-control border border-line-strong bg-surface pr-3 pl-8 text-sm text-ink placeholder:text-muted hover:border-subtle focus-visible:border-primary"
+            className="h-8 w-full rounded-control border border-line-strong bg-surface pr-9 pl-8 text-sm text-ink placeholder:text-muted hover:border-subtle focus-visible:border-primary"
           />
+          {searching && state.status === "ready" ? (
+            <Spinner
+              label="Searching"
+              className="pointer-events-none absolute top-1/2 right-2.5 -translate-y-1/2 text-muted"
+            />
+          ) : null}
         </div>
       </div>
 
@@ -131,7 +143,7 @@ export function WindchillDocumentsCard({ onOpen }: WindchillDocumentsCardProps) 
           }
         />
       ) : (
-        <DocumentTable items={state.list.items} importing={importing} onOpen={open} />
+        <DocumentResults items={state.list.items} importing={importing} onOpen={open} />
       )}
     </Card>
   );
@@ -143,28 +155,34 @@ interface DocumentTableProps {
   onOpen: (reference: string) => void;
 }
 
+/** A table from `sm` up; a stacked list on phones, where six columns do not fit. */
+function DocumentResults(props: DocumentTableProps) {
+  const wide = useMediaQuery("(min-width: 640px)");
+  return wide ? <DocumentTable {...props} /> : <DocumentStack {...props} />;
+}
+
 function DocumentTable({ items, importing, onOpen }: DocumentTableProps) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full border-collapse text-sm">
         <thead className="bg-surface-muted">
           <tr className="border-b border-line">
-            <th scope="col" className={TH}>
+            <th scope="col" className={cx(TH, "w-28")}>
               Number
             </th>
             <th scope="col" className={TH}>
               Name
             </th>
-            <th scope="col" className={TH}>
+            <th scope="col" className={cx(TH, "w-14")}>
               Rev
             </th>
-            <th scope="col" className={TH}>
+            <th scope="col" className={cx(TH, "w-28")}>
               State
             </th>
             <th scope="col" className={cx(TH, "max-md:hidden")}>
               Location
             </th>
-            <th scope="col" className={cx(TH, "max-md:hidden")}>
+            <th scope="col" className={cx(TH, "w-32 max-md:hidden")}>
               Modified
             </th>
           </tr>
@@ -218,6 +236,49 @@ function DocumentTable({ items, importing, onOpen }: DocumentTableProps) {
         </tbody>
       </table>
     </div>
+  );
+}
+
+function DocumentStack({ items, importing, onOpen }: DocumentTableProps) {
+  return (
+    <ul className="divide-y divide-line">
+      {items.map((item) => {
+        const { metadata } = item;
+        const busy = importing === item.reference;
+        const version = formatVersion(metadata);
+        return (
+          <li key={item.reference}>
+            <button
+              type="button"
+              disabled={importing !== null}
+              aria-busy={busy || undefined}
+              onClick={() => onOpen(item.reference)}
+              className={cx(
+                "block w-full px-4 py-3 text-left transition-colors hover:bg-primary-bg/50 disabled:cursor-default",
+                importing && !busy && "opacity-60",
+              )}
+            >
+              <span className="flex items-center gap-2">
+                <span className="font-mono text-xs text-ink tabular-nums">
+                  {metadata.number ?? "—"}
+                </span>
+                {version ? (
+                  <span className="font-mono text-xs text-muted tabular-nums">{version}</span>
+                ) : null}
+                <StateBadge state={metadata.state} />
+                {busy ? <Spinner label={`Opening ${metadata.name}`} className="ml-auto" /> : null}
+              </span>
+              <span className="mt-1 block font-medium text-primary">{metadata.name}</span>
+              {metadata.location ? (
+                <span className="mt-0.5 block truncate text-xs text-muted">
+                  {metadata.location}
+                </span>
+              ) : null}
+            </button>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 

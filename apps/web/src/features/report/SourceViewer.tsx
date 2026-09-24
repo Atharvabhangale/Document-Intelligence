@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight, ExternalLink, FileText, X } from "lucide-react";
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent, type RefObject } from "react";
 
 import { contentUrl } from "../../api/client";
 import type { Citation, ExtractedPage } from "../../api/types";
@@ -7,6 +7,7 @@ import { ErrorState } from "../../components/ErrorState";
 import { Button, ButtonLink, IconButton } from "../../components/ui/Button";
 import { Notice } from "../../components/ui/Notice";
 import { SkeletonLines } from "../../components/ui/Skeleton";
+import { pluralize } from "../../lib/format";
 import { findQuoteRange, type TextRange } from "../../lib/quote";
 import { pdfPageUrl } from "../../lib/url";
 import type { PagesState } from "../document/useDocumentPages";
@@ -45,6 +46,7 @@ export function SourceViewer({
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const targetPage = displayPage(citation);
   const [page, setPage] = useState(() => clampPage(targetPage, pageCount));
 
@@ -152,39 +154,49 @@ export function SourceViewer({
           </div>
         </header>
 
-        <div className="flex-1 space-y-4 overflow-y-auto px-4 py-4">
-          <section aria-label="Citation" className="space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <CitationStatusBadge citation={citation} />
-              <span className="text-xs text-muted tabular-nums">Cited as page {citation.page}</span>
-            </div>
-            <p className="text-xs text-muted">
-              {meta.description}
-              {citation.status === "relocated" ? ` It was found on page ${targetPage}.` : ""}
-              {!pageExists ? ` The document has ${pageCount} pages.` : ""}
-            </p>
-            <blockquote className="rounded-control border-l-2 border-line-strong bg-surface-muted px-3 py-2 text-sm text-ink">
-              “{citation.quote}”
-            </blockquote>
-          </section>
+        {/* The citation stays in view; only the page text below it scrolls. */}
+        <section
+          aria-label="Citation"
+          className="max-h-[40%] shrink-0 space-y-2 overflow-y-auto border-b border-line bg-surface-muted px-4 py-3"
+        >
+          <div className="flex flex-wrap items-center gap-2">
+            <CitationStatusBadge citation={citation} />
+            <span className="text-xs text-muted tabular-nums">Cited as page {citation.page}</span>
+          </div>
+          <p className="text-xs text-muted">
+            {meta.description}
+            {citation.status === "relocated" ? ` It was found on page ${targetPage}.` : ""}
+            {!pageExists ? ` The document has ${pageCount} ${pluralize(pageCount, "page")}.` : ""}
+          </p>
+          <blockquote className="rounded-control border-l-2 border-line-strong bg-surface px-3 py-2 text-sm break-words text-ink">
+            “{citation.quote}”
+          </blockquote>
+        </section>
 
-          <section aria-labelledby={`${titleId}-text`} className="space-y-2">
-            <h3
-              id={`${titleId}-text`}
-              className="text-xs font-semibold tracking-wide text-muted uppercase"
-            >
-              Extracted text — page {page}
-            </h3>
+        <section aria-labelledby={`${titleId}-text`} className="flex min-h-0 flex-1 flex-col">
+          <h3
+            id={`${titleId}-text`}
+            className="px-4 pt-3 pb-2 text-xs font-semibold tracking-wide text-muted uppercase"
+          >
+            Extracted text — page {page}
+          </h3>
+          {/* Focusable so keyboard users can scroll long pages. */}
+          <div
+            ref={scrollRef}
+            tabIndex={0}
+            className="min-h-0 flex-1 overflow-y-auto px-4 pb-4 focus-visible:-outline-offset-2"
+          >
             <PageText
               pages={pages}
               pageNumber={page}
               citation={citation}
               targetPage={targetExists ? targetPage : null}
+              scrollContainer={scrollRef}
               onGoToTarget={() => setPage(clampPage(targetPage, pageCount))}
               onRetry={onRetryPages}
             />
-          </section>
-        </div>
+          </div>
+        </section>
       </div>
     </div>
   );
@@ -196,6 +208,8 @@ interface PageTextProps {
   citation: Citation;
   /** Page holding the evidence, or null when the cited page does not exist. */
   targetPage: number | null;
+  /** The scrollable element around the page text (the highlight is scrolled into it). */
+  scrollContainer: RefObject<HTMLDivElement | null>;
   onGoToTarget: () => void;
   onRetry: () => void;
 }
@@ -205,6 +219,7 @@ function PageText({
   pageNumber,
   citation,
   targetPage,
+  scrollContainer,
   onGoToTarget,
   onRetry,
 }: PageTextProps) {
@@ -224,6 +239,7 @@ function PageText({
       page={page}
       citation={citation}
       targetPage={pageNumber === targetPage ? null : targetPage}
+      scrollContainer={scrollContainer}
       onGoToTarget={onGoToTarget}
     />
   );
@@ -234,17 +250,37 @@ interface LoadedPageTextProps {
   citation: Citation;
   /** Another page to offer ("Go to page N") when the quote is not on this one. */
   targetPage: number | null;
+  scrollContainer: RefObject<HTMLDivElement | null>;
   onGoToTarget: () => void;
 }
 
-function LoadedPageText({ page, citation, targetPage, onGoToTarget }: LoadedPageTextProps) {
+function LoadedPageText({
+  page,
+  citation,
+  targetPage,
+  scrollContainer,
+  onGoToTarget,
+}: LoadedPageTextProps) {
   const markRef = useRef<HTMLElement>(null);
   const text = page?.text ?? "";
   const range: TextRange | null = text ? findQuoteRange(text, citation.quote) : null;
 
+  // Show the highlight in the upper third of the text pane (or the page start without one).
+  // Only the text pane scrolls, so the citation above it stays visible.
   useEffect(() => {
-    markRef.current?.scrollIntoView?.({ block: "center" });
-  }, [range?.start, page?.number]);
+    const container = scrollContainer.current;
+    if (!container) return;
+    const mark = markRef.current;
+    if (!mark) {
+      container.scrollTop = 0;
+      return;
+    }
+    const offset =
+      mark.getBoundingClientRect().top -
+      container.getBoundingClientRect().top +
+      container.scrollTop;
+    container.scrollTop = Math.max(0, offset - container.clientHeight / 3);
+  }, [range?.start, page?.number, scrollContainer]);
 
   if (!page || !text.trim()) {
     return (

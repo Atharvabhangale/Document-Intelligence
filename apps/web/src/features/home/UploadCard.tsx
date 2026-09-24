@@ -25,10 +25,16 @@ export function validatePdf(file: File, maxUploadMb: number): string | null {
 
 interface UploadCardProps {
   maxUploadMb: number | undefined;
+  /** Page limit of the server (checked there, after upload). */
+  maxPages?: number | undefined;
   onUploaded: (documentId: string) => void;
 }
 
-export function UploadCard({ maxUploadMb = DEFAULT_MAX_UPLOAD_MB, onUploaded }: UploadCardProps) {
+export function UploadCard({
+  maxUploadMb = DEFAULT_MAX_UPLOAD_MB,
+  maxPages,
+  onUploaded,
+}: UploadCardProps) {
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const lastFile = useRef<File | null>(null);
@@ -76,7 +82,16 @@ export function UploadCard({ maxUploadMb = DEFAULT_MAX_UPLOAD_MB, onUploaded }: 
 
   return (
     <Card>
-      <CardHeader title="Upload a PDF" description={`PDF only · up to ${maxUploadMb} MB`} />
+      <CardHeader
+        title="Upload a PDF"
+        description={[
+          "PDF only",
+          `up to ${maxUploadMb} MB`,
+          maxPages ? `${maxPages.toLocaleString()} pages` : null,
+        ]
+          .filter(Boolean)
+          .join(" · ")}
+      />
       <div className="space-y-3 p-4">
         <div
           onDragEnter={onDragOver}

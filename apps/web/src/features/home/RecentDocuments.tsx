@@ -35,7 +35,12 @@ export function RecentDocuments({ onOpen }: RecentDocumentsProps) {
   if (state.status === "loading") return null;
   if (state.status === "error") {
     return (
-      <ErrorState compact error={state.error} onRetry={() => setReloadKey((key) => key + 1)} />
+      <Card>
+        <CardHeader title="Recent documents" />
+        <div className="p-4">
+          <ErrorState compact error={state.error} onRetry={() => setReloadKey((key) => key + 1)} />
+        </div>
+      </Card>
     );
   }
   if (state.items.length === 0) return null;

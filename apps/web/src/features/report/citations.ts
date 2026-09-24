@@ -78,3 +78,18 @@ export function citationLabel(citation: Citation): string {
   }
   return `Source: page ${page}, ${status}`;
 }
+
+/** `text` shortened to at most `max` characters at a word boundary, with an ellipsis. */
+export function truncateText(text: string, max: number): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (clean.length <= max) return clean;
+  const cut = clean.slice(0, max - 1);
+  const space = cut.lastIndexOf(" ");
+  return `${(space > max * 0.6 ? cut.slice(0, space) : cut).trimEnd()}…`;
+}
+
+/** Hover text of a citation chip: id, status and a preview of the quote (plain text). */
+export function citationTooltip(citation: Citation): string {
+  const meta = CITATION_STATUS[citation.status];
+  return `${citation.id} · ${meta.label}: “${truncateText(citation.quote, 140)}”`;
+}

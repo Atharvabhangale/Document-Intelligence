@@ -1,7 +1,7 @@
 import type { Citation } from "../../api/types";
 import { cx } from "../../lib/cx";
 import { CitationStatusIcon } from "./CitationStatusIcon";
-import { CITATION_STATUS, citationLabel, displayPage } from "./citations";
+import { CITATION_STATUS, citationLabel, citationTooltip, displayPage } from "./citations";
 
 const CHIP_TONES = {
   success: "border-success/30 bg-success-bg text-success hover:border-success/60",
@@ -26,7 +26,7 @@ export function CitationChip({ citation, onOpen }: CitationChipProps) {
       type="button"
       onClick={() => onOpen(citation)}
       aria-label={citationLabel(citation)}
-      title={`${meta.label}: ${meta.description}`}
+      title={citationTooltip(citation)}
       className={cx(
         "tabular-nums inline-flex h-5 items-center gap-1 rounded-full border px-1.5 text-xs font-medium transition-colors",
         CHIP_TONES[meta.tone],
