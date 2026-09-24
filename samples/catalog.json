@@ -1,0 +1,70 @@
+{
+  "developmentOnly": true,
+  "notice": "DEVELOPMENT ONLY. Synthetic sample documents for the mock Windchill provider. Not connected to Windchill; all content, names and people are fictitious.",
+  "documents": [
+    {
+      "reference": "mock://wtdocument/SOP-00123/A.3",
+      "file": "SOP-00123_Machine_Maintenance_A.3.pdf",
+      "metadata": {
+        "number": "SOP-00123",
+        "name": "Machine Maintenance SOP",
+        "revision": "A",
+        "iteration": "3",
+        "state": "Released",
+        "location": "Manufacturing SOP Library / Maintenance",
+        "documentType": "SOP",
+        "modifiedDate": "2026-03-14T09:30:00Z",
+        "modifiedBy": "J. Alvarez",
+        "sourceRef": "mock://wtdocument/SOP-00123/A.3"
+      }
+    },
+    {
+      "reference": "mock://wtdocument/SOP-00087/B.2",
+      "file": "SOP-00087_Lockout_Tagout_B.2.pdf",
+      "metadata": {
+        "number": "SOP-00087",
+        "name": "Lockout/Tagout (LOTO) Procedure",
+        "revision": "B",
+        "iteration": "2",
+        "state": "Released",
+        "location": "Manufacturing SOP Library / Safety",
+        "documentType": "SOP",
+        "modifiedDate": "2026-01-22T14:05:00Z",
+        "modifiedBy": "M. Chen",
+        "sourceRef": "mock://wtdocument/SOP-00087/B.2"
+      }
+    },
+    {
+      "reference": "mock://wtdocument/SOP-00141/A.1",
+      "file": "SOP-00141_Hydraulic_Press_Setup_A.1.pdf",
+      "metadata": {
+        "number": "SOP-00141",
+        "name": "Hydraulic Press Setup and Changeover",
+        "revision": "A",
+        "iteration": "1",
+        "state": "In Work",
+        "location": "Manufacturing SOP Library / Production",
+        "documentType": "SOP",
+        "modifiedDate": "2026-09-02T11:20:00Z",
+        "modifiedBy": "R. Okafor",
+        "sourceRef": "mock://wtdocument/SOP-00141/A.1"
+      }
+    },
+    {
+      "reference": "mock://wtdocument/SOP-00056/C.1",
+      "file": "SOP-00056_Coolant_Management_C.1.pdf",
+      "metadata": {
+        "number": "SOP-00056",
+        "name": "Coolant Concentration Control",
+        "revision": "C",
+        "iteration": "1",
+        "state": "Released",
+        "location": "Manufacturing SOP Library / Maintenance",
+        "documentType": "SOP",
+        "modifiedDate": "2025-11-05T08:10:00Z",
+        "modifiedBy": "S. Patel",
+        "sourceRef": "mock://wtdocument/SOP-00056/C.1"
+      }
+    }
+  ]
+}
