@@ -53,7 +53,9 @@ def _atomic_write(path: Path, data: bytes) -> None:
 
 class DocumentRepository(ABC):
     @abstractmethod
-    def save(self, record: DocumentRecord, content: bytes, extracted: ExtractedDocument) -> None: ...
+    def save(
+        self, record: DocumentRecord, content: bytes, extracted: ExtractedDocument
+    ) -> None: ...
 
     @abstractmethod
     def get(self, document_id: str) -> DocumentRecord: ...

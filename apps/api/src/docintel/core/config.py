@@ -87,7 +87,9 @@ class Settings(BaseSettings):
     prompts_dir: Path = Field(
         default=REPO_ROOT / "prompts", validation_alias=AliasChoices("PROMPTS_DIR")
     )
-    max_upload_mb: int = Field(default=25, ge=1, le=200, validation_alias=AliasChoices("MAX_UPLOAD_MB"))
+    max_upload_mb: int = Field(
+        default=25, ge=1, le=200, validation_alias=AliasChoices("MAX_UPLOAD_MB")
+    )
     max_pages: int = Field(default=300, ge=1, validation_alias=AliasChoices("MAX_PAGES"))
     # Conservative estimate of the document size (in tokens) we send in a single request.
     max_document_tokens: int = Field(
